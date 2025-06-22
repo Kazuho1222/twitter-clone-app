@@ -1,29 +1,26 @@
-import { posts } from "@/server/db/schema"
-import { desc } from "drizzle-orm"
-import { z } from "zod"
-import { j, publicProcedure } from "../jstack"
+import { posts, users } from "@/server/db/schema";
+import { desc, eq } from "drizzle-orm";
+import { z } from "zod";
+import { j, publicProcedure } from "../jstack";
 
 export const postRouter = j.router({
-  recent: publicProcedure.query(async ({ c, ctx }) => {
-    const { db } = ctx
+  all: publicProcedure.query(async ({ c, ctx }) => {
+    const { db } = ctx;
 
-    const [recentPost] = await db
-      .select()
+    const postsData = await db
+      .select({
+        id: posts.id,
+        content: posts.content,
+        handle: posts.handle,
+        name: users.name,
+        like: posts.like,
+        image: posts.image,
+        createdAt: posts.createdAt,
+        avatarUrl: users.avatarUrl,
+      })
       .from(posts)
-      .orderBy(desc(posts.createdAt))
-      .limit(1)
-
-    return c.superjson(recentPost ?? null)
+      .innerJoin(users, eq(users.handle, posts.handle))
+      .orderBy(desc(posts.createdAt));
+    return c.superjson(postsData);
   }),
-
-  create: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(async ({ ctx, c, input }) => {
-      const { name } = input
-      const { db } = ctx
-
-      const post = await db.insert(posts).values({ name })
-
-      return c.superjson(post)
-    }),
-})
+});

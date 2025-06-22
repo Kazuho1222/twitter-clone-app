@@ -1,10 +1,12 @@
+import PostForm from "@/components/PostForm"
+import PostList from "@/components/PostList"
 import { SignOutButton } from "@clerk/nextjs"
 
 function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-      <SignOutButton />
+    <div className="max-w-xl mx-auto min-h-screen">
+      <div><PostForm /></div>
+      <PostList />
     </div>
   )
 }
