@@ -8,6 +8,20 @@
       "when": 1750326617684,
       "tag": "0000_dashing_anita_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750413638721,
+      "tag": "0001_empty_longshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750517553811,
+      "tag": "0002_abandoned_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }
