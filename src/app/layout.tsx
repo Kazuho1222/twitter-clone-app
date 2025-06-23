@@ -3,7 +3,7 @@ import { Providers } from "./components/providers"
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs"
 
 import "./globals.css"
-import SideMenu from "@/components/SideMenu"
+import { SideMenu } from "@/components/SideMenu"
 
 export const metadata: Metadata = {
   title: "JStack Twitter App",
