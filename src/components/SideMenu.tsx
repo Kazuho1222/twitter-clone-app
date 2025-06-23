@@ -2,7 +2,7 @@
 
 import { SignOutButton, useClerk } from "@clerk/nextjs"
 import React from "react"
-import { Bookmark, ListTodo, LogOut, Search, Twitter, X, User } from "lucide-react"
+import { Bookmark, ListTodo, LogOut, Search, Twitter, User } from "lucide-react"
 import Link from "next/link"
 
 const menuItems = [
@@ -23,7 +23,7 @@ export function SideMenu() {
     <div className="fixed top-0 left-0 h-screen flex flex-col border-r w-64 py-4 px-2 bg-white z-30 overflow-y-auto shadow-md">
       <div className="px-4 mb-6">
         <Link href="/" className="flex items-center">
-          <X className="h-8 w-8 text-blue-500" />
+          <Twitter className="h-8 w-8 text-blue-500" />
         </Link>
       </div >
 
