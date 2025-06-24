@@ -1,9 +1,9 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { client } from "@/lib/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { client } from "@/lib/client"
-import { Button } from "@/components/ui/button"
 
 export const RecentPost = () => {
   const [name, setName] = useState<string>("")
@@ -12,14 +12,14 @@ export const RecentPost = () => {
   const { data: recentPost, isPending: isLoadingPosts } = useQuery({
     queryKey: ["get-recent-post"],
     queryFn: async () => {
-      const res = await client.post.recent.$get()
+      const res = await client.post.all.$get()
       return await res.json()
     },
   })
 
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: async ({ name }: { name: string }) => {
-      const res = await client.post.create.$post({ name })
+      const res = await client.post.create.$post({ content: name, handle: "user" })
       return await res.json()
     },
     onSuccess: async () => {
@@ -36,7 +36,7 @@ export const RecentPost = () => {
         </p>
       ) : recentPost ? (
         <p className="text-[#ececf399] text-base/6">
-          Your recent post: "{recentPost.name}"
+          Your recent post: "{recentPost[0]?.content || 'No content'}"
         </p>
       ) : (
         <p className="text-[#ececf399] text-base/6">
