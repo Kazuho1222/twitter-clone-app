@@ -1,9 +1,9 @@
 'use client'
 
+import { Button } from "@/components/ui/button"
 import { Post } from "@/domain/Post"
 import { Heart, MessageCircle, Repeat, Share } from "lucide-react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 
 interface PostItemProps {
   post: Post
@@ -36,7 +36,7 @@ export function PostItem({ post }: PostItemProps) {
                 alt="Post image"
                 width={500}
                 height={300}
-                className="object-contain max-w-full"
+                className="object-cover w-full h-full"
               />
             </div>
           )}
