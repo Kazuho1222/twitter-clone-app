@@ -43,6 +43,13 @@
       "when": 1750558955462,
       "tag": "0005_left_umar",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1750810046414,
+      "tag": "0006_safe_butterfly",
+      "breakpoints": true
     }
   ]
 }

@@ -1,25 +1,47 @@
 'use client'
+
 import { Post } from "@/domain/Post"
-import { UserProfile } from "@/domain/User"
 import { client } from "@/lib/client"
-import { useQuery, QueryClient, useQueryClient } from '@tanstack/react-query';
-import React from "react"
-import { PostItem } from "./PostItem";
+import { useAuth } from "@clerk/nextjs"
+import { useQuery } from "@tanstack/react-query"
+import { PostItem } from "./PostItem"
 
-export default function PostList({ user }: { user: UserProfile }) {
-  const QueryClient = useQueryClient()
+export function PostList() {
+  const { userId } = useAuth()
 
-  const { data: posts, isLoading } = useQuery<Post[]>({
-    queryKey: ["posts", user.handle],
+  const { data: posts, isLoading, error } = useQuery({
+    queryKey: ["posts", userId],
     queryFn: async () => {
-      const res = await client.post.all.$get()
-      const data = await res.json()
-      return data as Post[]
+      const params = userId ? { userId } : {}
+      const res = await client.post.all.$get(params)
+      return await res.json()
     },
   })
 
-  if (isLoading || !posts) {
-    return <p>Loading...</p>
+  console.log("PostList debug:", { posts, isLoading, error, userId })
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error loading posts: {error.message}
+      </div>
+    )
+  }
+
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        No posts yet. Be the first to post!
+      </div>
+    )
   }
 
   return (

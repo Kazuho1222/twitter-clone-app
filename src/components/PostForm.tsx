@@ -17,12 +17,16 @@ export default function PostForm({ user }: { user: UserProfile }) {
       content: string
       handle: string
       image?: string
+      clerkId: string
+      email: string
+      name: string
+      avatarUrl?: string
     }) => {
       const res = await client.post.create.$post(newPost)
       return await res.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", user.handle] })
+      queryClient.invalidateQueries({ queryKey: ["posts"] })
       setContent("")
       setImage(null)
     }
@@ -34,6 +38,10 @@ export default function PostForm({ user }: { user: UserProfile }) {
         content,
         handle: user.handle,
         image: image || undefined,
+        clerkId: user.clerkId,
+        email: user.email,
+        name: user.name,
+        avatarUrl: user.avatarUrl || undefined,
       })
     }
   }
@@ -55,19 +63,19 @@ export default function PostForm({ user }: { user: UserProfile }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
+    <form onSubmit={handleSubmit} className="p-4 border-b border-gray-200">
       <div className="flex gap-3">
         <div className="flex-shrink-0">
-          <div className="w-10 h-10 rouded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+          <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
             {user.name[0]?.toUpperCase()}
           </div>
         </div>
-        <div className="flex-grow">
+        <div className="flex-grow min-w-0">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="What is happening?!"
-            className="w-full p-2 text-xl border-none focus:outline-none resize-none min-h-[80px]"
+            className="w-full p-2 text-xl border-none focus:outline-none resize-none min-h-[80px] bg-transparent"
             rows={3}
           />
 
@@ -79,7 +87,7 @@ export default function PostForm({ user }: { user: UserProfile }) {
                   alt="Upload preview"
                   width={500}
                   height={300}
-                  className="object-contain max-w-full"
+                  className="object-cover w-full h-full"
                 />
               </div>
               <button
@@ -96,7 +104,7 @@ export default function PostForm({ user }: { user: UserProfile }) {
               <button
                 type="button"
                 onClick={handleImageButtonClick}
-                className="p-2 rouded-full hover:bg-blue-50"
+                className="p-2 rounded-full hover:bg-blue-50"
               >
                 <FileImage size={18} />
               </button>
@@ -135,13 +143,14 @@ export default function PostForm({ user }: { user: UserProfile }) {
 
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rouded-full font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              disabled={!content.trim() || createPostMutation.isPending}
+              className="px-4 py-2 bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createPostMutation.isPending ? "Posting..." : "Post"}
             </button>
           </div>
         </div>
       </div>
-    </form >
+    </form>
   )
 }

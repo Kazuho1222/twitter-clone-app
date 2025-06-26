@@ -1,15 +1,17 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/"]);
-const isWebhookRoute = createRouteMatcher(["/api/webhook/clerk(.*)"]);
-const isPingRoute = createRouteMatcher(["/api/systems/ping(.*)"]);
+const isProtectedRoute = (path: string) => path === "/";
+const isWebhookRoute = (path: string) => path.startsWith("/api/webhook/clerk");
+const isPingRoute = (path: string) => path.startsWith("/api/systems/ping");
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isWebhookRoute(req) || isPingRoute(req)) {
+  const path = new URL(req.url).pathname;
+
+  if (isWebhookRoute(path) || isPingRoute(path)) {
     return;
   }
 
-  if (isProtectedRoute(req)) {
+  if (isProtectedRoute(path)) {
     await auth.protect();
   }
 });

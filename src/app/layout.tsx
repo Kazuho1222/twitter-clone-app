@@ -1,9 +1,9 @@
+import { ClerkProvider } from "@clerk/nextjs"
 import type { Metadata } from "next"
 import { Providers } from "./components/providers"
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs"
 
-import "./globals.css"
 import { SideMenu } from "@/components/SideMenu"
+import "./globals.css"
 
 export const metadata: Metadata = {
   title: "JStack Twitter App",

@@ -1,10 +1,10 @@
 import {
+  index,
+  integer,
   pgTable,
   serial,
   text,
   timestamp,
-  index,
-  integer,
 } from "drizzle-orm/pg-core";
 
 export const posts = pgTable(
@@ -35,4 +35,21 @@ export const users = pgTable(
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
   (table) => [index("User_email_idx").on(table.email)]
+);
+
+export const likes = pgTable(
+  "likes",
+  {
+    id: serial("id").primaryKey(),
+    postId: integer("postId")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    userId: text("userId").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("Like_postId_idx").on(table.postId),
+    index("Like_userId_idx").on(table.userId),
+    index("Like_postId_userId_idx").on(table.postId, table.userId),
+  ]
 );
